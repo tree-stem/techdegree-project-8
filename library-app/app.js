@@ -28,7 +28,7 @@ app.use(function (req, res, next) {
   const error = new Error();
   error.status = 404;
   error.message = "Oops! Something went wrong.";
-  res.render('error', { error });
+  res.render('page-not-found', { error });
 });
 
 // error handler
