@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const db = require('./models');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -35,15 +36,23 @@ app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
+  res.locals.status = err.status || 500;
 
   // render the error page
-  res.status(500);
+  res.status(err.status || 500);
   res.render('error', { err });
-  console.log('Error status: ', err.status, 'Error message: ', err.message);
+  console.log('Error status: ', res.locals.status, 'Error message: ', err.message);
 });
 
-// test 
-
-console.log('this is a test');
+// Sync all tables
+(async () => {
+  try {
+    await db.sequelize.authenticate();
+    console.log('Connection to the database successful!');
+    await db.sequelize.sync();
+  } catch (error) {
+    console.error('Error connecting to the database: ', error);
+  }
+})();
 
 module.exports = app;
