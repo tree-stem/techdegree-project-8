@@ -9,18 +9,6 @@ const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../config/config.json')[env];
 const db = {};
 
-(async () => {
-  // Sync all tables
-  await db.sequelize.sync({ force: true });
-
-  try { 
-    await sequelize.authenticte();
-    console.log('Connection to the database successful!');
-  } catch (error) {
-    console.error('Error connecting to the database: ', error);
-  }
-})();
-
 
 let sequelize;
 if (config.use_env_variable) {
@@ -28,6 +16,18 @@ if (config.use_env_variable) {
 } else {
   sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
+
+// Sync all tables
+(async () => {
+  try { 
+    await sequelize.authenticate();
+    console.log('Connection to the database successful!');
+    await sequelize.sync({ force: true });
+  } catch (error) {
+    console.error('Error connecting to the database: ', error);
+  }
+})();
+
 
 fs
   .readdirSync(__dirname)
