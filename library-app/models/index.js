@@ -9,6 +9,19 @@ const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../config/config.json')[env];
 const db = {};
 
+(async () => {
+  // Sync all tables
+  await db.sequelize.sync({ force: true });
+
+  try { 
+    await sequelize.authenticte();
+    console.log('Connection to the database successful!');
+  } catch (error) {
+    console.error('Error connecting to the database: ', error);
+  }
+})();
+
+
 let sequelize;
 if (config.use_env_variable) {
   sequelize = new Sequelize(process.env[config.use_env_variable], config);
