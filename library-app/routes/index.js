@@ -19,16 +19,19 @@ router.get('/', (req, res) => {
   res.redirect('/books');
 });
 
+// GET /books and load books data from database
 router.get('/books', asyncHandler(async (req, res) => {
   let books;
   books = await Book.findAll();
   res.render('index', { books: books, title: "Books" });
 }));
 
+// GET /books/new and render view
 router.get('/books/new', (req, res) => {
   res.render('new-book', { title: 'New Book' });
 });
 
+// POST new book and redirect user to home page
 router.post('/books/new', asyncHandler(async (req, res) => {
   let book;
   try {
@@ -44,6 +47,7 @@ router.post('/books/new', asyncHandler(async (req, res) => {
   }
 }));
 
+// GET /books/:id and find book with matching id
 router.get('/books/:id', asyncHandler(async (req, res) => {
   const book = await Book.findByPk(req.params.id);
   if (book) {
@@ -53,6 +57,7 @@ router.get('/books/:id', asyncHandler(async (req, res) => {
   }
 }));
 
+// POST updated book and redirect user
 router.post('/books/:id', asyncHandler(async (req, res) => {
   console.log(req.body);
   let book;
@@ -75,6 +80,7 @@ router.post('/books/:id', asyncHandler(async (req, res) => {
   }
 }));
 
+// POST deleted book and redirect user
 router.post('/books/:id/delete', asyncHandler(async (req, res) => {
   let book;
   book = await Book.findByPk(req.params.id);
